@@ -19,7 +19,7 @@ import XMonad.Actions.WithAll (sinkAll, killAll)
 import qualified XMonad.Actions.Search as S
 
     -- Data
-import Data.Char (isSpace)
+import Data.Char (isSpace, toUpper)
 import Data.Monoid
 import Data.Maybe (isJust)
 import Data.Tree
