@@ -183,6 +183,34 @@ myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts float
                                  ||| threeCol
                                  -- ||| threeRow
 
+--Prompt Stuff
+
+dtXPConfig :: XPConfig
+dtXPConfig = def
+      { font                = myFont
+      , bgColor             = "#282c34"
+      , fgColor             = "#bbc2cf"
+      , bgHLight            = "#c792ea"
+      , fgHLight            = "#000000"
+      , borderColor         = "#535974"
+      , promptBorderWidth   = 0
+      , promptKeymap        = dtXPKeymap
+      , position            = Top
+      -- , position            = CenteredAt { xpCenterY = 0.3, xpWidth = 0.3 }
+      , height              = 23
+      , historySize         = 256
+      , historyFilter       = id
+      , defaultText         = []
+      , autoComplete        = Just 100000  -- set Just 100000 for .1 sec
+      , showCompletionOnTab = False
+      -- , searchPredicate     = isPrefixOf
+      , searchPredicate     = fuzzyMatch
+      , defaultPrompter     = id $ map toUpper  -- change prompt to UPPER
+      -- , defaultPrompter     = unwords . map reverse . words  -- reverse the prompt
+      -- , defaultPrompter     = drop 5 .id (++ "XXXX: ")  -- drop first 5 chars of prompt and add XXXX:
+      , alwaysHighlight     = True
+      , maxComplRows        = Nothing      -- set to 'Just 5' for 5 rows
+      }
 
 -- KEYBINDINGS
 
