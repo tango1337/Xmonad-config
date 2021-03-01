@@ -10,4 +10,6 @@ haskell-extra 1.7.9-35
 
 AUR:
 
-yay picom-ibhagwan-git
+yay picom-ibhagwan-git 
+
+yay haskell-extra 1.7.9-35
