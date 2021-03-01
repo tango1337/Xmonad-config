@@ -1,14 +1,3 @@
--- Xmonad is a dynamically tiling X11 window manager that is written and
--- configured in Haskell. Official documentation: https://xmonad.org
-
--- This is the xmonad configuration of Derek Taylor (DistroTube)
--- My YouTube: http://www.youtube.com/c/DistroTube
--- My GitLab:  http://www.gitlab.com/dwt1/
-
--- This config is massively long. It is purposely bloated with a ton of
--- examples of what you can do with xmonad. It is written more as a
--- study guide rather than a config that you should download and use.
-
 ------------------------------------------------------------------------
 -- IMPORTS
 ------------------------------------------------------------------------
@@ -90,9 +79,7 @@ import XMonad.Util.SpawnOnce
 ------------------------------------------------------------------------
 -- VARIABLES
 ------------------------------------------------------------------------
--- It's nice to assign values to stuff that you will use more than once
--- in the config. Setting values for things like font, terminal and editor
--- means you only have to change the value here to make changes globally.
+
 myFont :: String
 myFont = "xft:Mononoki Nerd Font:bold:size=9"
 
@@ -103,12 +90,10 @@ myTerminal :: String
 myTerminal = "alacritty"   -- Sets default terminal
 
 myBrowser :: String
-myBrowser = myTerminal ++ " -e lynx "  -- Sets lynx as browser for tree select
--- myBrowser = "firefox "                 -- Sets firefox as browser for tree select
+myBrowser = "firefox"      -- Sets default terminal
 
 myEditor :: String
-myEditor = "emacsclient -c -a emacs "  -- Sets emacs as editor for tree select
--- myEditor = myTerminal ++ " -e vim "    -- Sets vim as editor for tree select
+myEditor = "nano"          -- Sets default terminal
 
 myBorderWidth :: Dimension
 myBorderWidth = 2          -- Sets border width for windows
@@ -119,9 +104,6 @@ myNormColor   = "#292d3e"  -- Border color of normal windows
 myFocusColor :: String
 myFocusColor  = "#bbc5ff"  -- Border color of focused windows
 
-altMask :: KeyMask
-altMask = mod1Mask         -- Setting this for use in xprompts
-
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
@@ -130,13 +112,11 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 ------------------------------------------------------------------------
 myStartupHook :: X ()
 myStartupHook = do
-          spawnOnce "nitrogen --restore &"
+          spawnOnce "feh --bg-scale ~/.config/backgrounds/space.png"
           spawnOnce "picom &"
           spawnOnce "nm-applet &"
           spawnOnce "volumeicon &"
           spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x292d3e --height 18 &"
-          spawnOnce "/usr/bin/emacs --daemon &"
-          -- spawnOnce "kak -d -s mysession &"
           setWMName "LG3D"
 
 ------------------------------------------------------------------------
