@@ -1,6 +1,5 @@
-------------------------------------------------------------------------
 -- IMPORTS
-------------------------------------------------------------------------
+
     -- Base
 import XMonad
 import System.IO (hPutStrLn)
@@ -76,9 +75,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.SpawnOnce
 
-------------------------------------------------------------------------
 -- VARIABLES
-------------------------------------------------------------------------
 
 myFont :: String
 myFont = "xft:Mononoki Nerd Font:bold:size=9"
@@ -107,9 +104,7 @@ myFocusColor  = "#bbc5ff"  -- Border color of focused windows
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
-------------------------------------------------------------------------
 -- AUTOSTART
-------------------------------------------------------------------------
 
 myStartupHook :: X ()
 myStartupHook = do
@@ -120,12 +115,7 @@ myStartupHook = do
           spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x292d3e --height 18 &"
           setWMName "LG3D"
 
-------------------------------------------------------------------------
 -- WORKSPACES
-------------------------------------------------------------------------
--- My workspaces are clickable meaning that the mouse can be used to switch
--- workspaces. This requires xdotool. You need to use UnsafeStdInReader instead
--- of simply StdInReader in xmobar config so you can pass actions to it.
 
 xmobarEscape :: String -> String
 xmobarEscape = concatMap doubleLts
@@ -135,15 +125,13 @@ xmobarEscape = concatMap doubleLts
 
 myWorkspaces :: [String]
 myWorkspaces = clickable . map xmobarEscape
-               $ ["dev", "www", "sys", "doc", "vbox", "chat", "mus", "vid", "gfx"]
+               $ ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
   where
         clickable l = [ "<action=xdotool key super+" ++ show n ++ ">" ++ ws ++ "</action>" |
                       (i,ws) <- zip [1..9] l,
                       let n = i ]
 
-------------------------------------------------------------------------
 -- Windows that start in Float
-------------------------------------------------------------------------
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = composeAll
@@ -151,24 +139,17 @@ myManageHook = composeAll
      [ className =? "Steam"    --> doFloat
      ]
 
-------------------------------------------------------------------------
 -- Window Opacity
-------------------------------------------------------------------------
 
 myLogHook :: X ()
 myLogHook = fadeInactiveLogHook fadeAmount
     where fadeAmount = 0.85
 
-------------------------------------------------------------------------
 -- LAYOUTS
-------------------------------------------------------------------------
--- Makes setting the spacingRaw simpler to write. The spacingRaw
--- module adds a configurable amount of space around windows.
+
 mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
 mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
 
--- Below is a variation of the above except no borders are applied
--- if fewer than two windows. So a single window has no gaps.
 mySpacing' :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
 mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 
@@ -177,104 +158,34 @@ tall     = renamed [Replace "tall"]
            $ limitWindows 12
            $ mySpacing 8
            $ ResizableTall 1 (3/100) (1/2) []
-magnify  = renamed [Replace "magnify"]
-           $ magnifier
-           $ limitWindows 12
-           $ mySpacing 8
-           $ ResizableTall 1 (3/100) (1/2) []
 monocle  = renamed [Replace "monocle"]
            $ limitWindows 20 Full
 floats   = renamed [Replace "floats"]
            $ limitWindows 20 simplestFloat
-grid     = renamed [Replace "grid"]
-           $ limitWindows 12
-           $ mySpacing 8
-           $ mkToggle (single MIRROR)
-           $ Grid (16/10)
-spirals  = renamed [Replace "spirals"]
-           $ mySpacing' 8
-           $ spiral (6/7)
 threeCol = renamed [Replace "threeCol"]
            $ limitWindows 7
            $ mySpacing' 4
            $ ThreeCol 1 (3/100) (1/2)
-threeRow = renamed [Replace "threeRow"]
-           $ limitWindows 7
-           $ mySpacing' 4
-           -- Mirror takes a layout and rotates it by 90 degrees.
-           -- So we are applying Mirror to the ThreeCol layout.
-           $ Mirror
-           $ ThreeCol 1 (3/100) (1/2)
-tabs     = renamed [Replace "tabs"]
-           -- I cannot add spacing to this layout because it will
-           -- add spacing between window and tabs which looks bad.
-           $ tabbed shrinkText myTabConfig
-  where
-    myTabConfig = def { fontName            = "xft:Mononoki Nerd Font:regular:pixelsize=11"
-                      , activeColor         = "#292d3e"
-                      , inactiveColor       = "#3e445e"
-                      , activeBorderColor   = "#292d3e"
-                      , inactiveBorderColor = "#292d3e"
-                      , activeTextColor     = "#ffffff"
-                      , inactiveTextColor   = "#d0d0d0"
-                      }
-
--- Theme for showWName which prints current workspace when you change workspaces.
-myShowWNameTheme :: SWNConfig
-myShowWNameTheme = def
-    { swn_font              = "xft:Sans:bold:size=60"
-    , swn_fade              = 1.0
-    , swn_bgcolor           = "#000000"
-    , swn_color             = "#FFFFFF"
-    }
 
 -- The layout hook
+
 myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats $
                mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
              where
                -- I've commented out the layouts I don't use.
                myDefaultLayout =     tall
-                                 ||| magnify
+                                 -- ||| magnify
                                  ||| noBorders monocle
                                  ||| floats
                                  -- ||| grid
-                                 ||| noBorders tabs
+                                 -- ||| noBorders tabs
                                  -- ||| spirals
-                                 -- ||| threeCol
+                                 ||| threeCol
                                  -- ||| threeRow
 
-------------------------------------------------------------------------
--- SCRATCHPADS
-------------------------------------------------------------------------
--- Allows to have several floating scratchpads running different applications.
--- Import Util.NamedScratchpad.  Bind a key to namedScratchpadSpawnAction.
-myScratchPads :: [NamedScratchpad]
-myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
-                , NS "mocp" spawnMocp findMocp manageMocp
-                ]
-  where
-    spawnTerm  = myTerminal ++ " -n scratchpad"
-    findTerm   = resource =? "scratchpad"
-    manageTerm = customFloating $ W.RationalRect l t w h
-               where
-                 h = 0.9
-                 w = 0.9
-                 t = 0.95 -h
-                 l = 0.95 -w
-    spawnMocp  = myTerminal ++ " -n mocp 'mocp'"
-    findMocp   = resource =? "mocp"
-    manageMocp = customFloating $ W.RationalRect l t w h
-               where
-                 h = 0.9
-                 w = 0.9
-                 t = 0.95 -h
-                 l = 0.95 -w
 
-------------------------------------------------------------------------
 -- KEYBINDINGS
-------------------------------------------------------------------------
--- I am using the Xmonad.Util.EZConfig module which allows keybindings
--- to be written in simpler, emacs-like format.
+
 myKeys :: [(String, X ())]
 myKeys =
     -- Xmonad
@@ -296,17 +207,6 @@ myKeys =
         , ("M-f", sendMessage (T.Toggle "floats"))       -- Toggles my 'floats' layout
         , ("M-<Delete>", withFocused $ windows . W.sink) -- Push floating window back to tile
         , ("M-S-<Delete>", sinkAll)                      -- Push ALL floating windows to tile
-
-    -- Grid Select (CTRL-g followed by a key)
-        , ("C-g g", spawnSelected' myAppGrid)                 -- grid select favorite apps
-        , ("C-g m", spawnSelected' myBookmarkGrid)            -- grid select some bookmarks
-        , ("C-g c", spawnSelected' myConfigGrid)              -- grid select useful config files
-        , ("C-g t", goToSelected $ mygridConfig myColorizer)  -- goto selected window
-        , ("C-g b", bringSelected $ mygridConfig myColorizer) -- bring selected window
-
-    -- Tree Select/
-        -- tree select actions menu
-        , ("C-t a", treeselectAction tsDefaultConfig)
 
     -- Windows navigation
         , ("M-m", windows W.focusMaster)     -- Move focus to the master window
@@ -344,78 +244,12 @@ myKeys =
         , ("M-S-<KP_Add>", shiftTo Next nonNSP >> moveTo Next nonNSP)       -- Shifts focused window to next ws
         , ("M-S-<KP_Subtract>", shiftTo Prev nonNSP >> moveTo Prev nonNSP)  -- Shifts focused window to prev ws
 
-    -- Scratchpads
-        , ("M-C-<Return>", namedScratchpadAction myScratchPads "terminal")
-        , ("M-C-c", namedScratchpadAction myScratchPads "mocp")
-
-    -- Controls for mocp music player.
-        , ("M-u p", spawn "mocp --play")
-        , ("M-u l", spawn "mocp --next")
-        , ("M-u h", spawn "mocp --previous")
-        , ("M-u <Space>", spawn "mocp --toggle-pause")
-
-    -- Emacs (CTRL-e followed by a key)
-        , ("C-e e", spawn "emacsclient -c -a ''")                            -- start emacs
-        , ("C-e b", spawn "emacsclient -c -a '' --eval '(ibuffer)'")         -- list emacs buffers
-        , ("C-e d", spawn "emacsclient -c -a '' --eval '(dired nil)'")       -- dired emacs file manager
-        , ("C-e m", spawn "emacsclient -c -a '' --eval '(mu4e)'")            -- mu4e emacs email client
-        , ("C-e n", spawn "emacsclient -c -a '' --eval '(elfeed)'")          -- elfeed emacs rss client
-        , ("C-e s", spawn "emacsclient -c -a '' --eval '(eshell)'")          -- eshell within emacs
-        , ("C-e t", spawn "emacsclient -c -a '' --eval '(+vterm/here nil)'") -- eshell within emacs
-        -- emms is an emacs audio player. I set it to auto start playing in a specific directory.
-        , ("C-e a", spawn "emacsclient -c -a '' --eval '(emms)' --eval '(emms-play-directory-tree \"~/Music/Non-Classical/70s-80s/\")'")
-
-    --- My Applications (Super+Alt+Key)
-        , ("M-M1-a", spawn (myTerminal ++ " -e ncpamixer"))
-        , ("M-M1-b", spawn "surf www.youtube.com/c/DistroTube/")
-        , ("M-M1-e", spawn (myTerminal ++ " -e neomutt"))
-        , ("M-M1-f", spawn (myTerminal ++ " -e sh ./.config/vifm/scripts/vifmrun"))
-        , ("M-M1-i", spawn (myTerminal ++ " -e irssi"))
-        , ("M-M1-j", spawn (myTerminal ++ " -e joplin"))
-        , ("M-M1-l", spawn (myTerminal ++ " -e lynx -cfg=~/.lynx/lynx.cfg -lss=~/.lynx/lynx.lss gopher://distro.tube"))
-        , ("M-M1-m", spawn (myTerminal ++ " -e mocp"))
-        , ("M-M1-n", spawn (myTerminal ++ " -e newsboat"))
-        , ("M-M1-p", spawn (myTerminal ++ " -e pianobar"))
-        , ("M-M1-r", spawn (myTerminal ++ " -e rtv"))
-        , ("M-M1-t", spawn (myTerminal ++ " -e toot curses"))
-        , ("M-M1-w", spawn (myTerminal ++ " -e wopr report.xml"))
-        , ("M-M1-y", spawn (myTerminal ++ " -e youtube-viewer"))
-
-    -- Multimedia Keys
-        , ("<XF86AudioPlay>", spawn "cmus toggle")
-        , ("<XF86AudioPrev>", spawn "cmus prev")
-        , ("<XF86AudioNext>", spawn "cmus next")
-        -- , ("<XF86AudioMute>",   spawn "amixer set Master toggle")  -- Bug prevents it from toggling correctly in 12.04.
-        , ("<XF86AudioLowerVolume>", spawn "amixer set Master 5%- unmute")
-        , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 5%+ unmute")
-        , ("<XF86HomePage>", spawn "firefox")
-        , ("<XF86Search>", safeSpawn "firefox" ["https://www.google.com/"])
-        , ("<XF86Mail>", runOrRaise "geary" (resource =? "thunderbird"))
-        , ("<XF86Calculator>", runOrRaise "gcalctool" (resource =? "gcalctool"))
-        , ("<XF86Eject>", spawn "toggleeject")
-        , ("<Print>", spawn "scrotd 0")
-        ]
-        -- Appending search engine prompts to keybindings list.
-        -- Look at "search engines" section of this config for values for "k".
-        ++ [("M-s " ++ k, S.promptSearch dtXPConfig' f) | (k,f) <- searchList ]
-        ++ [("M-S-s " ++ k, S.selectSearch f) | (k,f) <- searchList ]
-        -- Appending some extra xprompts to keybindings list.
-        -- Look at "xprompt settings" section this of config for values for "k".
-        ++ [("M-p " ++ k, f dtXPConfig') | (k,f) <- promptList ]
-        ++ [("M-p " ++ k, f dtXPConfig' g) | (k,f,g) <- promptList' ]
-        -- The following lines are needed for named scratchpads.
-          where nonNSP          = WSIs (return (\ws -> W.tag ws /= "nsp"))
-                nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "nsp"))
-
-------------------------------------------------------------------------
 -- MAIN
-------------------------------------------------------------------------
+
 main :: IO ()
 main = do
-    -- Launching three instances of xmobar on their monitors.
-    xmproc0 <- spawnPipe "xmobar -x 0 /home/dt/.config/xmobar/xmobarrc0"
-    xmproc1 <- spawnPipe "xmobar -x 1 /home/dt/.config/xmobar/xmobarrc2"
-    xmproc2 <- spawnPipe "xmobar -x 2 /home/dt/.config/xmobar/xmobarrc1"
+    -- Launching xmobar
+    xmobarrc <- spawnPipe "xmobar -x 1 #/.config/xmobar/xmobarrc"
     -- the xmonad, ya know...what the WM is named after!
     xmonad $ ewmh def
         { manageHook = ( isFullscreen --> doFullFloat ) <+> myManageHook <+> manageDocks
