@@ -248,37 +248,37 @@ myKeys =
 
 main :: IO ()
 main = do
-    -- Launching xmobar
-    xmobarrc <- spawnPipe "xmobar -x 1 #/.config/xmobar/xmobarrc"
-    -- the xmonad, ya know...what the WM is named after!
-    xmonad $ ewmh def
-        { manageHook = ( isFullscreen --> doFullFloat ) <+> myManageHook <+> manageDocks
-        -- Run xmonad commands from command line with "xmonadctl command". Commands include:
-        -- shrink, expand, next-layout, default-layout, restart-wm, xterm, kill, refresh, run,
-        -- focus-up, focus-down, swap-up, swap-down, swap-master, sink, quit-wm. You can run
-        -- "xmonadctl 0" to generate full list of commands written to ~/.xsession-errors.
-        , handleEventHook    = serverModeEventHookCmd
-                               <+> serverModeEventHook
-                               <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
-                               <+> docksEventHook
-        , modMask            = myModMask
-        , terminal           = myTerminal
-        , startupHook        = myStartupHook
-        , layoutHook         = showWName' myShowWNameTheme myLayoutHook
-        , workspaces         = myWorkspaces
-        , borderWidth        = myBorderWidth
-        , normalBorderColor  = myNormColor
-        , focusedBorderColor = myFocusColor
-        , logHook = workspaceHistoryHook <+> myLogHook <+> dynamicLogWithPP xmobarPP
-                        { ppOutput = \x -> hPutStrLn xmproc0 x  >> hPutStrLn xmproc1 x  >> hPutStrLn xmproc2 x
-                        , ppCurrent = xmobarColor "#c3e88d" "" . wrap "[" "]" -- Current workspace in xmobar
-                        , ppVisible = xmobarColor "#c3e88d" ""                -- Visible but not current workspace
-                        , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" ""   -- Hidden workspaces in xmobar
-                        , ppHiddenNoWindows = xmobarColor "#F07178" ""        -- Hidden workspaces (no windows)
-                        , ppTitle = xmobarColor "#d0d0d0" "" . shorten 60     -- Title of active window in xmobar
-                        , ppSep =  "<fc=#666666> | </fc>"                     -- Separators in xmobar
-                        , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"  -- Urgent workspace
-                        , ppExtras  = [windowCount]                           -- # of windows current workspace
-                        , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
-                        }
-        } `additionalKeysP` myKeys
+            -- Launching xmobar
+            xmobarrc <- spawnPipe "xmobar -x 1 #/.config/xmobar/xmobarrc"
+            -- the xmonad, ya know...what the WM is named after!
+            xmonad $ ewmh def
+                { manageHook = ( isFullscreen --> doFullFloat ) <+> myManageHook <+> manageDocks
+                -- Run xmonad commands from command line with "xmonadctl command". Commands include:
+                -- shrink, expand, next-layout, default-layout, restart-wm, xterm, kill, refresh, run,
+                -- focus-up, focus-down, swap-up, swap-down, swap-master, sink, quit-wm. You can run
+                -- "xmonadctl 0" to generate full list of commands written to ~/.xsession-errors.
+                , handleEventHook    = serverModeEventHookCmd
+                                       <+> serverModeEventHook
+                                       <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
+                                       <+> docksEventHook
+                , modMask            = myModMask
+                , terminal           = myTerminal
+                , startupHook        = myStartupHook
+                , layoutHook         = showWName' myShowWNameTheme myLayoutHook
+                , workspaces         = myWorkspaces
+                , borderWidth        = myBorderWidth
+                , normalBorderColor  = myNormColor
+                , focusedBorderColor = myFocusColor
+                , logHook = workspaceHistoryHook <+> myLogHook <+> dynamicLogWithPP xmobarPP
+                                { ppOutput = \x -> hPutStrLn xmproc0 x  >> hPutStrLn xmproc1 x  >> hPutStrLn xmproc2 x
+                                , ppCurrent = xmobarColor "#c3e88d" "" . wrap "[" "]" -- Current workspace in xmobar
+                                , ppVisible = xmobarColor "#c3e88d" ""                -- Visible but not current workspace
+                                , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" ""   -- Hidden workspaces in xmobar
+                                , ppHiddenNoWindows = xmobarColor "#F07178" ""        -- Hidden workspaces (no windows)
+                                , ppTitle = xmobarColor "#d0d0d0" "" . shorten 60     -- Title of active window in xmobar
+                                , ppSep =  "<fc=#666666> | </fc>"                     -- Separators in xmobar
+                                , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"  -- Urgent workspace
+                                , ppExtras  = [windowCount]                           -- # of windows current workspace
+                                , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
+                                }
+                } `additionalKeysP` myKeys
