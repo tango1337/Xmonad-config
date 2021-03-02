@@ -19,7 +19,7 @@
 import XMonad
 import System.Directory
 import System.IO (hPutStrLn)
-import System.Exit (exitSuccess, ExitSuccess)
+import System.Exit (exitSuccess, ExitCode( ExitSuccess ))
 import qualified XMonad.StackSet as W
 
     -- Actions
