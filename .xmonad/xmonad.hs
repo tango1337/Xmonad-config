@@ -383,9 +383,9 @@ myLogHook = return ()
 --
 myStartupHook = X ()
 myStartupHook = do
-            spawnOnce "feh --bg-scale ~/.config/backgrounds/space.png"
-            spawnOnce "picom &"
-            setWMName "LG3D"
+                spawnOnce "feh --bg-scale ~/.config/backgrounds/space.png"
+                spawnOnce "picom &"
+                setWMName "LG3D"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
