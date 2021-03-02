@@ -167,18 +167,19 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
-    
-    , ("M-d", decWindowSpacing 4)           -- Decrease window spacing
-    , ("M-i", incWindowSpacing 4)           -- Increase window spacing
-    , ("M-S-d", decScreenSpacing 4)         -- Decrease screen spacing
-    , ("M-S-i", incScreenSpacing 4)         -- Increase screen spacing
-
 
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
     --
     -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    
+    -- Increase/Decrease spacing
+    
+    , ((modm              , xK_d     ), decWindowSpacing 2) -- decrease window spacing
+    , ((modm              , xK_i     ), incWindowSpacing 2) -- increase window spacing
+    , ((modm .|.          , xK_d     ), decScreenSpacing 2) -- decrease screen spacing
+    , ((modm .|.          , xK_i     ), decScreenSpacing 2) -- increase screen spacing
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -264,13 +265,11 @@ threeCol = renamed [Replace "threeCol"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 7
-           $ mySpacing 8
            $ ThreeCol 1 (3/100) (1/2)
 threeRow = renamed [Replace "threeRow"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 7
-           $ mySpacing 8
            $ Mirror
            $ ThreeCol 1 (3/100) (1/2)
 
