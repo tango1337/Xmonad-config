@@ -277,25 +277,29 @@ tall     = renamed [Replace "tall"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 12
-           $ mySpacing 8
+           $ mySpacing 6
            $ ResizableTall 1 (3/100) (1/2) []
 monocle  = renamed [Replace "monocle"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 20 Full
+           $ mySpacing 6
 floats   = renamed [Replace "floats"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 20 simplestFloat
+           $ mySpacing 6
 threeCol = renamed [Replace "threeCol"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 7
+           $ mySpacing 6
            $ ThreeCol 1 (3/100) (1/2)
 threeRow = renamed [Replace "threeRow"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 7
+           $ mySpacing 6
            $ Mirror
            $ ThreeCol 1 (3/100) (1/2)
 
