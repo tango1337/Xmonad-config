@@ -278,28 +278,48 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- restarting (with 'mod-q') to reset your layout state to the new
 -- defaults, as xmonad preserves your old layout settings by default.
 --
--- * NOTE: XMonad.Hooks.EwmhDesktops users must remove the obsolete
--- ewmhDesktopsLayout modifier from layoutHook. It no longer exists.
--- Instead use the 'ewmh' function from that module to modify your
--- defaultConfig as a whole. (See also logHook, handleEventHook, and
--- startupHook ewmh notes.)
---
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
-  where
-    -- default tiling algorithm partitions the screen into two panes
-    tiled   = Tall nmaster delta ratio
 
-    -- The default number of windows in the master pane
-    nmaster = 1
+-- define layouts
 
-    -- Default proportion of screen occupied by master pane
-    ratio   = 1/2
+tall     = renamed [Replace "tall"]
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 12
+           $ mySpacing 8
+           $ ResizableTall 1 (3/100) (1/2) []
+monocle  = renamed [Replace "monocle"]
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 20 Full
+floats   = renamed [Replace "floats"]
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 20 simplestFloat
+threeCol = renamed [Replace "threeCol"]
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 7
+           $ ThreeCol 1 (3/100) (1/2)
+threeRow = renamed [Replace "threeRow"]
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 7
+           $ Mirror
+           $ ThreeCol 1 (3/100) (1/2)
 
-    -- Percent of screen to increment by when resizing panes
-    delta   = 3/100
+
+myLayout = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
+               $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
+             where
+               myDefaultLayout =     tall
+                                 ||| noBorders monocle
+                                 ||| floats
+                                 ||| threeCol
+                                 ||| threeRow
+
 
 ------------------------------------------------------------------------
 -- Window rules:
