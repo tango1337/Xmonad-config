@@ -178,8 +178,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     
     , ((modm              , xK_d     ), decWindowSpacing 2) -- decrease window spacing
     , ((modm              , xK_i     ), incWindowSpacing 2) -- increase window spacing
-    , ((modm .|.          , xK_d     ), decScreenSpacing 2) -- decrease screen spacing
-    , ((modm .|.          , xK_i     ), decScreenSpacing 2) -- increase screen spacing
+    , ((modm .|. shiftMask, xK_d     ), decScreenSpacing 2) -- decrease screen spacing
+    , ((modm .|. shiftMask, xK_i     ), decScreenSpacing 2) -- increase screen spacing
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -376,7 +376,7 @@ defaults = defaultConfig {
         focusedBorderColor = myFocusedBorderColor,
 
       -- key bindings
-        keys               = myKeys, additionalKeysP,
+        keys               = myKeys,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
