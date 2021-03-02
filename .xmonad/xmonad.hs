@@ -381,7 +381,7 @@ myLogHook = return ()
 -- It will add initialization of EWMH support to your custom startup
 -- hook by combining it with ewmhDesktopsStartup.
 --
-myStartupHook = X ()
+myStartupHook :: X ()
 myStartupHook = do
                 spawnOnce "feh --bg-scale ~/.config/backgrounds/space.png"
                 spawnOnce "picom &"
