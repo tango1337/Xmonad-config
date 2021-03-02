@@ -332,6 +332,7 @@ myStartupHook :: X ()
 myStartupHook = do
                 spawnOnce "feh --bg-scale ~/.config/backgrounds/space.png"
                 spawnOnce "picom &"
+                spawnOnce "xmobar &"
                 setWMName "LG3D"
 
 ------------------------------------------------------------------------
