@@ -19,7 +19,7 @@
 import XMonad
 import System.Directory
 import System.IO (hPutStrLn)
-import System.Exit (exitSuccess)
+import System.Exit (exitSuccess, ExitSuccess)
 import qualified XMonad.StackSet as W
 
     -- Actions
@@ -281,6 +281,11 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
+
+-- borders
+
+mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
 
 -- define layouts
 
