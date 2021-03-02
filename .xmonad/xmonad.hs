@@ -257,22 +257,6 @@ monocle  = renamed [Replace "monocle"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 20 Full
-floats   = renamed [Replace "floats"]
-           $ windowNavigation
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 20 simplestFloat
-threeCol = renamed [Replace "threeCol"]
-           $ windowNavigation
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 7
-           $ ThreeCol 1 (3/100) (1/2)
-threeRow = renamed [Replace "threeRow"]
-           $ windowNavigation
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 7
-           $ Mirror
-           $ ThreeCol 1 (3/100) (1/2)
-
 
 myLayout = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
                $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
