@@ -1,25 +1,9 @@
---
--- xmonad example config file for xmonad-0.9
---
--- A template showing all available configuration hooks,
--- and how to override the defaults in your own xmonad.hs conf file.
---
--- Normally, you'd only override those defaults you care about.
---
--- NOTE: Those updating from earlier xmonad versions, who use
--- EwmhDesktops, safeSpawn, WindowGo, or the simple-status-bar
--- setup functions (dzen, xmobar) probably need to change
--- xmonad.hs, please see the notes below, or the following
--- link for more details:
---
--- http://www.haskell.org/haskellwiki/Xmonad/Notable_changes_since_0.8
---
 
   -- Base
 import XMonad
 import System.Directory
 import System.IO (hPutStrLn)
-import System.Exit (exitSuccess, ExitCode( ExitSuccess ))
+import System.Exit
 import qualified XMonad.StackSet as W
 
     -- Actions
