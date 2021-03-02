@@ -79,65 +79,32 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.SpawnOnce
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
+-- TERMINAL
+
 myTerminal      = "alacritty"
 
+-- BORDERS
+
+myNormalBorderColor  = "#dddddd"
+myFocusedBorderColor = "#ff0000"
+myBorderWidth   = 1
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
 
--- Width of the window border in pixels.
---
-myBorderWidth   = 1
+--MODKEY
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
 -- ("right alt"), which does not conflict with emacs keybindings. The
 -- "windows key" is usually mod4Mask.
---
+
 myModMask       = mod1Mask
 
--- NOTE: from 0.9.1 on numlock mask is set automatically. The numlockMask
--- setting should be removed from configs.
---
--- You can safely remove this even on earlier xmonad versions unless you
--- need to set it to something other than the default mod2Mask, (e.g. OSX).
---
--- The mask for the numlock key. Numlock status is "masked" from the
--- current modifier status, so the keybindings will work with numlock on or
--- off. You may need to change this on some systems.
---
--- You can find the numlock modifier by running "xmodmap" and looking for a
--- modifier with Num_Lock bound to it:
---
--- > $ xmodmap | grep Num
--- > mod2        Num_Lock (0x4d)
---
--- Set numlockMask = 0 if you don't have a numlock key, or want to treat
--- numlock status separately.
---
--- myNumlockMask   = mod2Mask -- deprecated in xmonad-0.9.1
-------------------------------------------------------------
+-- WORKSPACES
 
-
--- The default number of workspaces (virtual screens) and their names.
--- By default we use numeric strings, but any string may be used as a
--- workspace name. The number of workspaces is determined by the length
--- of this list.
---
--- A tagging example:
---
--- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
-
--- Border colors for unfocused and focused windows, respectively.
---
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -200,6 +167,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
+    
+    , ("M-d", decWindowSpacing 4)           -- Decrease window spacing
+    , ("M-i", incWindowSpacing 4)           -- Increase window spacing
+    , ("M-S-d", decScreenSpacing 4)         -- Decrease screen spacing
+    , ("M-S-i", incScreenSpacing 4)         -- Increase screen spacing
+
 
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
@@ -283,12 +256,10 @@ monocle  = renamed [Replace "monocle"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 20 Full
-           $ mySpacing 8
 floats   = renamed [Replace "floats"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
            $ limitWindows 20 simplestFloat
-           $ mySpacing 8
 threeCol = renamed [Replace "threeCol"]
            $ windowNavigation
            $ subLayout [] (smartBorders Simplest)
@@ -406,7 +377,7 @@ defaults = defaultConfig {
         focusedBorderColor = myFocusedBorderColor,
 
       -- key bindings
-        keys               = myKeys,
+        keys               = myKeys, `additionalKeysP`
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
